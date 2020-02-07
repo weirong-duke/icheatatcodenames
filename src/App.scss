@@ -1,0 +1,88 @@
+@import './mixins.scss';
+@keyframes resultAppear {
+  from   {
+    opacity: 0;
+    top: 100vh;
+  }
+  to {
+    opacity: 1;
+    top: 0;
+  }
+}
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    height: 100px;
+    width: 100px;
+  }
+  to {
+    opacity: 1;
+
+  }
+}
+
+.App {
+  display: flex;
+  height: 100vh;
+  margin: auto;
+  position: absolute;
+  text-align: center;
+  width: 100vw;
+  overflow: hidden;
+
+  .results {
+    left: 60%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: auto;
+    width: 40%;
+    max-height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+
+    &__word {
+      border: 1px solid black;
+      border-radius: 24px;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 3px;
+      margin-right: 6px;
+      opacity: 0;
+      top: 100vh;
+      padding: 12px 18px;
+      position: relative;
+      animation: 0.3s resultAppear forwards ease-in-out;
+
+    }
+  }
+
+  .search {
+    width: 60%;
+    max-height: calc(100% - 12px);
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &__card {
+      background-color: blanchedalmond;
+      animation: 0.3s cardAppear forwards;
+      @include codenames-card(blanchedalmond);
+    }
+
+    &__contents {
+      display: grid;
+      grid-template-columns: 33.33% 33.33% 33.33%;
+      grid-template-rows: minmax(120px, 185px) minmax(120px, 185px) minmax(120px, 185px);
+      height: calc(100% - 48px);
+      position: relative;
+      top: 24px;
+    }
+
+    &__text {
+      @include codenames-text;
+
+    }
+  }
+}

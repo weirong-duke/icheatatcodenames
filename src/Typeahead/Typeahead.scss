@@ -1,0 +1,68 @@
+@import 'src/mixins.scss';
+
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.typeahead {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  margin: 12px auto;
+  .open {
+    z-index: 10;
+  }
+
+  &__input {
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    position: absolute;
+    height: 24px;
+    width: 200px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  &__results {
+    opacity: 0;
+    display: grid;
+    grid-template-columns: 33.33% 33.33% 33.33%;
+    grid-template-rows: minmax(33%, 175px) minmax(33%, 175px) minmax(33%, 175px);
+    background-color: white;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    position: absolute;
+    top: 32px;
+    width: 75%;
+    height: 75vh;
+    transition: opacity 0.4s;
+
+    &.open {
+      opacity: 1;
+    }
+  }
+
+  &__result {
+    @include codenames-card(lightgray);
+    animation: 0.3s appear forwards;
+    cursor: pointer;
+    transition: background-color 0.5s, border 0.5s;
+
+    .outline {
+      border: 3px solid white;
+    }
+    &:hover {
+      background-color: blanchedalmond;
+
+      .outline {
+        border: 3px solid lightgray;
+      }
+    }
+  }
+}

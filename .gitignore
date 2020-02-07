@@ -11,6 +11,12 @@
 # production
 /build
 
+# pyenv stuff
+/scripts/Include
+/scripts/Lib
+/scripts/Scripts
+/scripts/tcl
+
 # misc
 .DS_Store
 .env.local

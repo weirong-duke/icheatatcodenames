@@ -1,0 +1,33 @@
+@mixin codenames-card($background-color) {
+  align-items: flex-end;
+  background-color: $background-color;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  height: calc(100% - 16px);
+  margin: 8px;
+  position: relative;
+  width: calc(100% - 16px);
+
+  .outline {
+    border-radius: 12px;
+    border: 3px solid lightgray;
+    display: block;
+    height: calc(100% - 24px);
+    position: absolute;
+    top: 9px;
+    width: calc(100% - 24px);
+  }
+}
+
+@mixin codenames-text {
+  align-items: center;
+  background-color: white;
+  color: black;
+  display: flex;
+  font-weight: bold;
+  padding: 6px 6px;
+  margin: 30px;
+  width: 70%;
+  justify-content: center;
+}
