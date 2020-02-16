@@ -1,6 +1,7 @@
 import React, {FC, useMemo, useState} from 'react';
 import Fuzzy from 'fuzzyset.js';
-import './Typeahead.scss';
+
+import 'components/Typeahead/Typeahead.scss';
 interface TypeaheadProps {
   onSelect(word): void;
   words: string[];
@@ -15,32 +16,25 @@ const TypeAhead: FC<TypeaheadProps> = ({words, onSelect}) => {
     return Fuzzy(words);
   }, [words]);
 
-  const handleToggleOpen = (e: React.FocusEvent) => {
-    console.log('ack', e)
-    e?.persist();
-    setIsOpen(!isOpen)
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {value} = e?.target;
     setInputValue(value);
     setFuzzyScores(fuzzySet.get(value) || []);
   } ;
 
-  const handleSelectWord = (word) => (e: React.MouseEvent) => {
-     // e?.stopPropagation();
-     console.log('selecting', word)
+  const handleSelectWord = (word) => () => {
      onSelect(word);
      setInputValue('');
      setFuzzyScores([]);
   };
 
-  console.log('fuzzy', fuzzyScores.sort(([scoreA, _], [scoreB, __]) => {
-    return scoreB - scoreA;
-  }));
+  const handleToggleOpen = (e: React.FocusEvent) => {
+    e?.persist();
+    setIsOpen(!isOpen)
+  };
 
   return <div className={`typeahead ${isOpen ? 'open' : ''}`}>
-    <input className="typeahead__input" onBlur={handleToggleOpen} onChange={handleInputChange} onFocus={handleToggleOpen} value={inputValue.toUpperCase()}/>
+    <input className="typeahead__input" onBlur={handleToggleOpen} onChange={handleInputChange} onFocus={handleToggleOpen} placeholder="Search for Codenames words" value={inputValue.toUpperCase()}/>
     <div className={`typeahead__results ${isOpen ? 'open' : ''}`}>
       {fuzzyScores.sort(([scoreA, _], [scoreB, __]) => {
         return scoreB - scoreA;

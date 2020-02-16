@@ -1,13 +1,19 @@
 @mixin codenames-card($background-color) {
+  @include codenames-card-style($background-color);
+
   align-items: flex-end;
+  height: calc(100% - 16px);
+  margin: 8px 12px;
+  position: relative;
+  width: calc(100% - 16px);
+
+}
+
+@mixin codenames-card-style($background-color) {
   background-color: $background-color;
   border-radius: 12px;
   display: flex;
   justify-content: center;
-  height: calc(100% - 16px);
-  margin: 8px;
-  position: relative;
-  width: calc(100% - 16px);
 
   .outline {
     border-radius: 12px;
@@ -23,11 +29,11 @@
 @mixin codenames-text {
   align-items: center;
   background-color: white;
-  color: black;
+  color: darken(darkgray, 45);
   display: flex;
   font-weight: bold;
-  padding: 6px 6px;
-  margin: 30px;
-  width: 70%;
   justify-content: center;
+  margin: 30px;
+  padding: 6px 6px;
+  width: 70%;
 }

@@ -1,4 +1,4 @@
-@import 'src/mixins.scss';
+@import 'styles/mixins';
 
 @keyframes appear {
   from {
@@ -11,37 +11,39 @@
 
 .typeahead {
   display: flex;
-  justify-content: center;
+  height: 36px;
+  margin: 12px auto 4px;
   position: relative;
   width: 100%;
-  margin: 12px auto;
   .open {
     z-index: 10;
   }
 
   &__input {
     border: 1px solid lightgray;
-    border-radius: 10px;
-    position: absolute;
-    height: 24px;
-    width: 200px;
-    text-align: center;
+    border-radius: 6px;
+    height: 32px;
     font-weight: bold;
+    margin-left: 12px;
+    padding-left: 12px;
+    position: absolute;
+    width: 400px;
   }
 
   &__results {
-    opacity: 0;
-    display: grid;
-    grid-template-columns: 33.33% 33.33% 33.33%;
-    grid-template-rows: minmax(33%, 175px) minmax(33%, 175px) minmax(33%, 175px);
     background-color: white;
     border: 1px solid lightgray;
     border-radius: 10px;
-    position: absolute;
-    top: 32px;
-    width: 75%;
+    display: grid;
+    grid-template-columns: 33.33% 33.33% 33.33%;
+    grid-template-rows: minmax(33%, 175px) minmax(33%, 175px) minmax(33%, 175px);
     height: 75vh;
+    left: 12px;
+    opacity: 0;
+    position: absolute;
     transition: opacity 0.4s;
+    top: 40px;
+    width: 75%;
 
     &.open {
       opacity: 1;

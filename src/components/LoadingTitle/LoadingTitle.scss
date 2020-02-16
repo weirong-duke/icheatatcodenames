@@ -1,0 +1,17 @@
+@keyframes bounce {
+  100% {
+    transform: translateY(20px);
+  }
+}
+
+.loading-title {
+  display: flex;
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 12px;
+
+  &__letter {
+    animation: bounce .3s ease-in-out infinite alternate;
+
+  }
+}
