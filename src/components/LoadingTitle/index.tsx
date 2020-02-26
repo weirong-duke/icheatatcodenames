@@ -9,7 +9,7 @@ const LoadingTitle: FC<LoadingTitleProps> = ({title}) => {
   const letters = title.split('');
   return <div className="loading-title">{
     letters.map((letter, letterIndex) => {
-      return <span className="loading-title__letter" style={{animationDelay: `${48 * (letterIndex)}ms`}}>
+      return <span className="loading-title__letter" key={letterIndex} style={{animationDelay: `${48 * (letterIndex)}ms`}}>
         {letter}
       </span>
     })

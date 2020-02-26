@@ -2,6 +2,7 @@ import React, {FC, useMemo, useState} from 'react';
 import Fuzzy from 'fuzzyset.js';
 
 import 'components/Typeahead/Typeahead.scss';
+
 interface TypeaheadProps {
   onSelect(word): void;
   words: string[];

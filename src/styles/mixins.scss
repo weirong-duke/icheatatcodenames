@@ -14,6 +14,15 @@
   border-radius: 12px;
   display: flex;
   justify-content: center;
+  transition: background-color 0.4s ease-in-out;
+
+  &.antagonist {
+    background-color: red;
+  }
+
+  &.assassin {
+    background-color: black;
+  }
 
   .outline {
     border-radius: 12px;

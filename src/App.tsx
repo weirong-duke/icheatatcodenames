@@ -11,10 +11,11 @@ import spyRed from 'assets/spy_red_thumbnail.png';
 import Drawer from 'components/Drawer';
 import Typeahead from 'components/Typeahead';
 import {default as data} from 'data/words_and_related_scores.json';
-
 export type WordScoreType = {
-  word: string;
+  isAntagonist: boolean;
+  isAssassin: boolean;
   score: number;
+  word: string;
 }
 
 interface WordScoreAndCountType {
@@ -26,39 +27,47 @@ const BLUE_COLOR = '#66AAC9';
 const myRainbow = new Rainbow();
 
 const App: FC = () => {
+  const [antagonistWords, setAntagonistWords] = useState<string[]>([]);
+  const [assassinWord, setAssassinWord] = useState<string>('');
   const [gradient, setGradient] = useState<any>(myRainbow);
   const [inputText, setInputText] = useState<string>('');
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
   const [showInformationDrawer, setShowInformationDrawer] = useState<string | false>(false);
 
   const relatedWords: WordScoreAndCountType = useMemo(() => selectedWords.reduce((final, word) => {
+    const isAntagonist = antagonistWords.includes(word);
+    const isAssassin = word === assassinWord;
+    const isNegative = isAntagonist || isAssassin;
     // @ts-ignore
     const relatedWordScores = data[word];
     if (!relatedWordScores) return final;
     Object.keys(relatedWordScores).forEach((relatedWord) => {
+      const score = (isNegative ? -1 : 1) * (isAssassin ? 10 : 1) * relatedWordScores[relatedWord]
       const wordScoreObject: WordScoreType = {
-        word: word,
-        score: relatedWordScores[relatedWord]
+        isAntagonist,
+        isAssassin,
+        score,
+        word: word
       };
       if (Object.keys(final).includes(relatedWord)) {
-        final[relatedWord][0] += relatedWordScores[relatedWord];
+        final[relatedWord][0] += score;
         final[relatedWord][1].push(wordScoreObject)
       } else {
-        final[relatedWord] = [relatedWordScores[relatedWord], [wordScoreObject]];
+        final[relatedWord] = [score, [wordScoreObject]];
       }
     });
     return final;
-  }, {} as WordScoreAndCountType), [selectedWords]);
+  }, {} as WordScoreAndCountType), [antagonistWords, assassinWord, selectedWords]);
 
   const sortedWords = useMemo(() => Object.keys(relatedWords).sort((wordA, wordB) => {
     return relatedWords[wordB][0] - relatedWords[wordA][0];
-  }), [selectedWords]);
+  }), [antagonistWords, assassinWord, selectedWords]);
 
   useEffect(() => {
     if (sortedWords.length) {
       const myRainbow = new Rainbow();
       myRainbow.setSpectrum(BLUE_COLOR, RED_COLOR);
-      myRainbow.setNumberRange(relatedWords?.[sortedWords?.[sortedWords.length - 1]][0], relatedWords?.[sortedWords?.[0]][0])
+      myRainbow.setNumberRange(relatedWords?.[sortedWords?.[sortedWords.length > 400 ? 400 : sortedWords.length - 1]][0], relatedWords?.[sortedWords?.[0]][0])
       setGradient(myRainbow);
     }
   }, [sortedWords]);
@@ -69,6 +78,22 @@ const App: FC = () => {
 
   const handleSelectTypeahead = (word) => {
     setSelectedWords([...selectedWords, word])
+  };
+
+  const handleToggleAntagonistWord = (word) => () => {
+    if (antagonistWords.includes(word)) {
+      setAntagonistWords(antagonistWords.filter(antWord => antWord !== word));
+    } else {
+      setAntagonistWords([...antagonistWords, word]);
+    }
+  };
+
+  const handleSetAssassinWord = (word) => () => {
+    setAssassinWord(word === assassinWord ? '' : word);
+  };
+
+  const handleRemoveSelectedWord = (word) => () => {
+    setSelectedWords(selectedWords.filter(selectedWord => selectedWord !== word));
   };
 
   const onSubmit = (e: React.FormEvent) => {
@@ -83,7 +108,6 @@ const App: FC = () => {
   const selectedDrawerWordScore = selectedDrawerWordData ? selectedDrawerWordData[0] : null;
   const selectedDrawerWordColor = selectedDrawerWordScore ? gradient.colorAt(selectedDrawerWordScore) : null;
 
-
   return (
     <div className="App">
       <div className={"header"} >
@@ -97,18 +121,17 @@ const App: FC = () => {
           <div className="search__contents" >
 
             {selectedWords.map((word) => {
-              return <div className="search__card" key={`selected-word-${word}`}>
+              return <div className={`search__card${assassinWord === word ? ' assassin' : antagonistWords.includes(word) ? ' antagonist' : ''}`} key={`selected-word-${word}`}>
                 <span className="icons">
-                      <img alt={`Assign Assassin Button for ${word}`} src={assassin} />
-                      <img alt={`Flip Team Button for ${word}`} src={spyBlue} />
+                      <img alt={`Assign Assassin Button for ${word}`} onClick={handleSetAssassinWord(word)} src={assassin} />
+                      <img alt={`Flip Team Button for ${word}`} onClick={handleToggleAntagonistWord(word)} src={antagonistWords.includes(word) ? spyRed : spyBlue} />
 
-                      <img alt={`Remove Card Button for ${word}`}  src={civilian} />
+                      <img alt={`Remove Card Button for ${word}`}  onClick={handleRemoveSelectedWord(word)} src={civilian} />
                 </span>
                 <span className="outline" />
                 <div className="search__text">{word.toUpperCase()}</div>
               </div>
             })}
-
           </div>
         </form>
 

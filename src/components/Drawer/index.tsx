@@ -1,7 +1,8 @@
 import React, {FC, useEffect, useState} from 'react';
-import {WordScoreType} from 'App'
 import 'components/Drawer/Drawer.scss';
+import {WordScoreType} from 'App'
 import LoadingTitle from "components/LoadingTitle";
+import {fetchTwinwordsDefinition} from 'fetch';
 
 interface DrawerProps {
   closeDrawer(e: React.MouseEvent): void;
@@ -40,18 +41,13 @@ const Drawer: FC<DrawerProps> = ({closeDrawer, color, relatedInformation, showDr
   const [definitionData, setDefinitionData] = useState<DefinitionDataType>({} as DefinitionDataType);
   const [loading, setLoading] = useState<boolean>(true);
 
+  console.log('testing this out', relatedInformation, color, totalScore)
+
   useEffect(() => {
     const fetchDefinition = async (word: string) => {
       try {
         setLoading(true);
-        const response = await fetch(`https://twinword-word-graph-dictionary.p.rapidapi.com/definition/?entry=${word}`, {
-          "method": "GET",
-          "headers": {
-            "x-rapidapi-host": "twinword-word-graph-dictionary.p.rapidapi.com",
-            "x-rapidapi-key": "635814f135msh5d0fef504d56895p10d444jsn26edf6b6104f"
-          }
-        });
-        const {meaning, result_code, result_msg}: TwinwordResponse = await response.json();
+        const {meaning, result_code, result_msg}: TwinwordResponse = await fetchTwinwordsDefinition(word);
         if (result_code === "200") {
           setDefinitionData({
             data: meaning,
@@ -100,6 +96,7 @@ const Drawer: FC<DrawerProps> = ({closeDrawer, color, relatedInformation, showDr
   const renderScoringBreakdown = () => {
     return <div className="information-drawer__breakdown fade-in">
       <table>
+        <tbody>
         {
           relatedInformation?.map(({word, score}, informationIndex) => {
             return <tr key={informationIndex}>
@@ -108,6 +105,7 @@ const Drawer: FC<DrawerProps> = ({closeDrawer, color, relatedInformation, showDr
             </tr>
           })
         }
+        </tbody>
       </table>
     </div>
   };
